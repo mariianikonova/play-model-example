@@ -1,4 +1,5 @@
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import java.util.List;
 import models.Product;
 import models.StockItem;
@@ -9,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import play.test.FakeApplication;
 import static play.test.Helpers.fakeApplication;
+import static play.test.Helpers.inMemoryDatabase;
 import static play.test.Helpers.start;
 import static play.test.Helpers.stop;
 
@@ -18,7 +20,7 @@ public class ModelTest {
   
   @Before 
   public void startApp() { 
-    application = fakeApplication(); 
+    application = fakeApplication(inMemoryDatabase()); 
     start(application); 
   } 
 
@@ -61,9 +63,26 @@ public class ModelTest {
     
     // Check that we've recovered all relationships
     assertEquals("Warehouse-StockItem", warehouses.get(0).stockitems.get(0), stockitems.get(0));
+    assertEquals("StockItem-Warehouse", stockitems.get(0).warehouse, warehouses.get(0));
+    assertEquals("Product-StockItem", products.get(0).stockitems.get(0), stockitems.get(0));
+    assertEquals("StockItem-Product", stockitems.get(0).product, products.get(0));
+    assertEquals("Product-Tag", products.get(0).tags.get(0), tags.get(0));
+    assertEquals("Tag-Product", tags.get(0).products.get(0), products.get(0));
+
     
-    // Check that deleting a tag deletes it from the product.
-    
-    // Check that deleting a warehouse deletes everything.
+    // Some code to illustrate model manipulation with ORM.
+    // Start in Java. Delete the tag from the (original) product instance.
+    product.tags.clear();
+    // Persist the revised product instance.
+    product.save();
+    // FYI: this does not change our previously retrieved instance from the database.
+    assertTrue("Previously retrieved product still has tag", !products.get(0).tags.isEmpty());
+    // But of course it does change a freshly retrieved product instance.
+    assertTrue("Fresh Product has no tag", Product.find().findList().get(0).tags.isEmpty());
+    // Note: Freshly retrieved Tag does not point to any Product.
+    assertTrue("Fresh Tag has no Products", Tag.find().findList().get(0).products.isEmpty());
+    // We can now delete this Tag from the database if we want.
+    tag.delete();
+    assertTrue("No more tags in database", Tag.find().findList().isEmpty());
   }
 }
