@@ -21,9 +21,9 @@ create table stock_item (
 ;
 
 create table tag (
-  id                        bigint not null,
+  primary_key               bigint not null,
   name                      varchar(255),
-  constraint pk_tag primary key (id))
+  constraint pk_tag primary key (primary_key))
 ;
 
 create table warehouse (
@@ -36,8 +36,8 @@ create table warehouse (
 
 create table product_tag (
   product_primary_key            bigint not null,
-  tag_id                         bigint not null,
-  constraint pk_product_tag primary key (product_primary_key, tag_id))
+  tag_primary_key                bigint not null,
+  constraint pk_product_tag primary key (product_primary_key, tag_primary_key))
 ;
 create sequence product_seq;
 
@@ -56,7 +56,7 @@ create index ix_stock_item_product_2 on stock_item (product_primary_key);
 
 alter table product_tag add constraint fk_product_tag_product_01 foreign key (product_primary_key) references product (primary_key) on delete restrict on update restrict;
 
-alter table product_tag add constraint fk_product_tag_tag_02 foreign key (tag_id) references tag (id) on delete restrict on update restrict;
+alter table product_tag add constraint fk_product_tag_tag_02 foreign key (tag_primary_key) references tag (primary_key) on delete restrict on update restrict;
 
 # --- !Downs
 
