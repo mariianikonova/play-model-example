@@ -33,12 +33,12 @@ public class ModelTest {
   public void testModel() {
     // Create 1 tag that's associated with 1 product.
     Tag tag = new Tag("Tag");
-    Product product = new Product("Product", "Description");
+    Product product = new Product("P-01", "French Press", "Coffee Maker");
     product.tags.add(tag);
     tag.products.add(product);
     
     // Create 1 warehouse that's associated with 1 StockItem for 1 Product
-    Warehouse warehouse = new Warehouse("Warehouse");
+    Warehouse warehouse = new Warehouse("W-01", "Honolulu Warehouse");
     StockItem stockitem = new StockItem(warehouse, product, 100);
     warehouse.stockitems.add(stockitem);
     stockitem.warehouse = warehouse;
