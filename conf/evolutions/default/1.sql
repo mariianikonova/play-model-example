@@ -22,7 +22,7 @@ create table stock_item (
 
 create table tag (
   primary_key               bigint not null,
-  name                      varchar(255),
+  tag_id                    varchar(255),
   constraint pk_tag primary key (primary_key))
 ;
 

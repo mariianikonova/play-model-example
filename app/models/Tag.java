@@ -15,15 +15,28 @@ public class Tag extends Model {
   @Id
   public Long primaryKey;
   @Required
-  public String name;
+  public String tagId;
   @ManyToMany(mappedBy="tags", cascade=CascadeType.ALL)
   public List<Product> products = new ArrayList<>();
   
-  public Tag (String name) {
-    this.name = name;
+  public Tag (String tagId) {
+    this.tagId = tagId;
+  }
+
+  /**
+   * No tag can be named "Tag". 
+   * Note: illustrates use of validate() method.
+   * @return null if OK, error string if not OK.
+   */
+  public String validate() {
+    return ("Tag".equals(this.tagId)) ? "Invalid tag name" : null;
   }
   
   public static Finder<Long, Tag> find() {
     return new Finder<Long, Tag>(Long.class, Tag.class);
+  }
+  
+  public String toString() {
+    return String.format("[Tag %s ]", tagId);
   }
 }

@@ -6,7 +6,6 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import static play.data.Form.form;
 
-
 public class Product extends Controller {
   
   public static Result index() {
